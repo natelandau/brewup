@@ -15,12 +15,18 @@ The settings allow for a variety of options including:
 -   Removing specific casks from MacOS quarantine
 -   Select which available formulae/casks to upgrade
 
-## Install CLI apps
+## Installation
 
 It is recommended to use [PIPX](https://pypa.github.io/pipx/) to install this package.
 
 ```bash
 pipx install brewup
+```
+
+If pipx is not an option, you can install Brewup in your Python user directory.
+
+```bash
+python -m pip install --user brewup
 ```
 
 Note: brewup requires Python >= v3.10.
