@@ -46,27 +46,27 @@ def main(
             show_default=True,
         ),
     ] = False,
-    list_upgradable: Annotated[
-        bool,
-        typer.Option(
-            "--list",
-            help="Show what would be upgraded, but do not actually upgrade anything",
-            show_default=True,
-        ),
-    ] = False,
-    select_packages: Annotated[
-        bool,
-        typer.Option(
-            "--select",
-            help="Select which packages will be upgraded",
-            show_default=True,
-        ),
-    ] = False,
     excluded_packages: Annotated[
         bool,
         typer.Option(
             "--excluded",
             help="Show updates excluded by config",
+            show_default=True,
+        ),
+    ] = False,
+    greedy: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--greedy/--not-greedy",
+            help="Bypass configuration file to control passing the --greedy flag to brew outdated",
+            show_default=False,
+        ),
+    ] = None,
+    list_upgradable: Annotated[
+        bool,
+        typer.Option(
+            "--list",
+            help="Show what would be upgraded, but do not actually upgrade anything",
             show_default=True,
         ),
     ] = False,
@@ -85,6 +85,14 @@ def main(
         typer.Option(
             "--log-to-file",
             help="Log to file",
+            show_default=True,
+        ),
+    ] = False,
+    select_packages: Annotated[
+        bool,
+        typer.Option(
+            "--select",
+            help="Select which packages will be upgraded",
             show_default=True,
         ),
     ] = False,
@@ -158,7 +166,7 @@ def main(
             console.print(f"           [red]{error['loc'][0]}: {error['msg']}[/red]")
         raise typer.Exit(code=1) from e
 
-    h = Homebrew()
+    h = Homebrew(greedy=greedy)
     h.update()
     rule("Upgrade packages" if not list_upgradable else "Identify outdated packages")
     updates = h.available_updates()

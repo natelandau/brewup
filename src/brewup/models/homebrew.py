@@ -14,8 +14,9 @@ from .package import Package
 class Homebrew:
     """Homebrew model."""
 
-    def __init__(self) -> None:
+    def __init__(self, greedy: bool | None = None) -> None:
         self.excludes = BrewupConfig().exclude_updades
+        self.greedy = greedy
 
     @staticmethod
     def update() -> None:
@@ -34,7 +35,8 @@ class Homebrew:
 
             # Build args for `brew outdated`
             args = ["outdated", "--json=v2"]
-            if BrewupConfig().greedy_casks:
+
+            if (self.greedy or BrewupConfig().greedy_casks) and self.greedy is not False:
                 args.append("--greedy")
 
             # Run `brew outdated` and parse JSON response

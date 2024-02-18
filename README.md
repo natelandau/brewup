@@ -1,4 +1,4 @@
-[![Automated Tests](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml/badge.svg?branch=main)](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml) [![codecov](https://codecov.io/gh/natelandau/brewup/graph/badge.svg?token=ZTBWSEACF9)](https://codecov.io/gh/natelandau/brewup)
+[![PyPI version](https://badge.fury.io/py/brewup.svg)](https://badge.fury.io/py/brewup) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/brewup) [![Automated Tests](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml/badge.svg?branch=main)](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml) [![codecov](https://codecov.io/gh/natelandau/brewup/graph/badge.svg?token=ZTBWSEACF9)](https://codecov.io/gh/natelandau/brewup)
 
 # brewup
 
