@@ -2,7 +2,6 @@
 
 import json
 
-import sh
 from loguru import logger
 from rich.progress import Progress
 
@@ -10,8 +9,6 @@ from brewup.constants import PackageType
 from brewup.utils import BrewupConfig, console, rule, run_homebrew
 
 from .package import Package
-
-BREW = sh.Command(BrewupConfig().homebrew_command)
 
 
 class Homebrew:
