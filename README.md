@@ -1,3 +1,5 @@
+[![Automated Tests](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml/badge.svg?branch=main)](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml) [![codecov](https://codecov.io/gh/natelandau/brewup/graph/badge.svg?token=ZTBWSEACF9)](https://codecov.io/gh/natelandau/brewup)
+
 # brewup
 
 A CLI that automates upgrading Homebrew and all installed packages. Brewup runs the following routines in order to keep your system up to date with the latest versions of all installed formulae and casks.
@@ -33,25 +35,31 @@ Note: brewup requires Python >= v3.10.
 
 ## Usage
 
-Select between available upgrades:
+Upgrade available formulae/casks:
 
 ```bash
 brewup
 ```
 
-Upgrade all available formulae/casks:
+Include formulae and casks that are excluded in the configuration file:
 
 ```bash
 brewup --all
 ```
 
+Select which formulae/casks to upgrade:
+
+```bash
+brewup --select
+```
+
 See all available upgrades but don't upgrade anything:
 
 ```bash
-brewup --dry-run
+brewup --list
 ```
 
-View any excluded formulae/casks with available upgrades:
+Only formulae/casks that are excluded in the configuration file:
 
 ```bash
 brewup --excluded

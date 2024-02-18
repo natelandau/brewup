@@ -93,4 +93,5 @@ def rule(msg: str) -> None:
     """Print a rule."""
     rule_style = "bold cyan"
     msg_style = "bold cyan"
+    console.print()
     console.rule(f"[{msg_style}]{msg.upper()}[/{msg_style}]", align="left", style=rule_style)

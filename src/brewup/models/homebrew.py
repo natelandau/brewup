@@ -51,7 +51,7 @@ class Homebrew:
                         installed=item["installed_versions"],
                         current=item["current_version"],
                         pinned_version=item.get("pinned_version", None),
-                        skip_upgrade=item["name"].lower() in (x.lower() for x in self.excludes),
+                        excluded=item["name"].lower() in (x.lower() for x in self.excludes),
                     )
                     logger.trace(f"Found update for {package.name}")
                     upgrades.append(package)
