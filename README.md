@@ -1,3 +1,5 @@
+[![Automated Tests](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml/badge.svg?branch=main)](https://github.com/natelandau/brewup/actions/workflows/automated-tests.yml) [![codecov](https://codecov.io/gh/natelandau/brewup/graph/badge.svg?token=ZTBWSEACF9)](https://codecov.io/gh/natelandau/brewup)
+
 # brewup
 
 A CLI that automates upgrading Homebrew and all installed packages. Brewup runs the following routines in order to keep your system up to date with the latest versions of all installed formulae and casks.
