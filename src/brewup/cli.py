@@ -4,17 +4,16 @@ import shutil
 from pathlib import Path
 from typing import Annotated, Optional
 
-import questionary
 import typer
 from confz import validate_all_configs
 from loguru import logger
 from pydantic import ValidationError
 
 from brewup.__version__ import __version__
-from brewup.constants import APP_DIR, CHOICE_STYLE, CONFIG_PATH
+from brewup.constants import APP_DIR, CONFIG_PATH
 from brewup.models import Homebrew
 from brewup.utils import console, instantiate_logger, rule
-from brewup.views import skip_update_table, update_table
+from brewup.views import choose_packages, update_table
 
 app = typer.Typer(add_completion=False, no_args_is_help=True, rich_markup_mode="rich")
 app_dir = typer.get_app_dir("brewup")
@@ -30,7 +29,7 @@ def version_callback(value: bool) -> None:
 
 @app.command()
 def main(
-    no_interaction: Annotated[
+    all_packages: Annotated[
         bool,
         typer.Option(
             "--all",
@@ -43,11 +42,27 @@ def main(
         typer.Option(
             "--dry-run",
             "-n",
+            help="Run all brew commands with the --dry-run flag",
+            show_default=True,
+        ),
+    ] = False,
+    list_upgradable: Annotated[
+        bool,
+        typer.Option(
+            "--list",
             help="Show what would be upgraded, but do not actually upgrade anything",
             show_default=True,
         ),
     ] = False,
-    excluded_updates: Annotated[
+    select_packages: Annotated[
+        bool,
+        typer.Option(
+            "--select",
+            help="Select which packages will be upgraded",
+            show_default=True,
+        ),
+    ] = False,
+    excluded_packages: Annotated[
         bool,
         typer.Option(
             "--excluded",
@@ -107,17 +122,22 @@ def main(
 
     [bold]Usage Examples:[/bold]
 
-    [dim]Select between available upgrades[/dim]
+    [dim]Upgrade available formulae/casks[/dim]
     brewup
 
-    [dim]Upgrade all available formulae/casks[/dim]
+    [dim]Include formulae and casks that are excluded in the configuration file[/dim]
     brewup --all
 
-    [dim]See all available upgrades but don't upgrade anything[/dim]
-    brewup --dry-run
+    [dim]Select which formulae/casks to upgrade[/dim]
+    brewup --select
 
-    [dim]View any excluded formulae/casks with available upgrades[/dim]
+    [dim]See all available upgrades but don't upgrade anything[/dim]
+    brewup --list
+
+    [dim]Only formulae/casks that are excluded in the configuration file[/dim]
     brewup --excluded
+
+
     """  # noqa: D301
     # Instantiate Logging
     instantiate_logger(verbosity, log_file, log_to_file)
@@ -140,35 +160,30 @@ def main(
 
     h = Homebrew()
     h.update()
-    rule("Upgrade packages" if not dry_run else "Identify outdated packages")
+    rule("Upgrade packages" if not list_upgradable else "Identify outdated packages")
     updates = h.available_updates()
 
-    if not updates:
+    # Determine which packages to upgrade
+    if all_packages:
+        filtered_updates = updates
+    elif excluded_packages:
+        filtered_updates = [i for i in updates if i.excluded]
+    else:
+        filtered_updates = [i for i in updates if not i.excluded]
+
+    if not filtered_updates:
         logger.success("No updates available")
         raise typer.Exit()
-    if dry_run:
-        console.print(update_table(updates))
-        raise typer.Exit()
-    if excluded_updates:
-        console.print(skip_update_table(updates))
-        raise typer.Exit()
-    if no_interaction:
-        packages_to_update = [i for i in updates if not i.skip_upgrade]
-    else:
-        packages_to_update = questionary.checkbox(
-            "Unselect packages for upgrade\n",
-            choices=[
-                questionary.Choice(title=i.name, checked=True, value=i)
-                for i in updates
-                if not i.skip_upgrade
-            ],
-            style=CHOICE_STYLE,
-            qmark="",
-        ).ask()
-        if not packages_to_update:
-            raise typer.Exit()
 
-    for i in packages_to_update:
+    if list_upgradable:
+        console.print(
+            update_table(
+                filtered_updates, title="Updates excluded by config" if excluded_packages else None
+            )
+        )
+        raise typer.Exit()
+
+    for i in choose_packages(packages=filtered_updates, select_all=not select_packages):
         i.upgrade(dry_run=dry_run)
 
     h.autoremove(dry_run=dry_run)

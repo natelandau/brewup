@@ -33,25 +33,31 @@ Note: brewup requires Python >= v3.10.
 
 ## Usage
 
-Select between available upgrades:
+Upgrade available formulae/casks:
 
 ```bash
 brewup
 ```
 
-Upgrade all available formulae/casks:
+Include formulae and casks that are excluded in the configuration file:
 
 ```bash
 brewup --all
 ```
 
+Select which formulae/casks to upgrade:
+
+```bash
+brewup --select
+```
+
 See all available upgrades but don't upgrade anything:
 
 ```bash
-brewup --dry-run
+brewup --list
 ```
 
-View any excluded formulae/casks with available upgrades:
+Only formulae/casks that are excluded in the configuration file:
 
 ```bash
 brewup --excluded

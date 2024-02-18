@@ -17,7 +17,7 @@ class Package:
         installed: list[str],
         current: str,
         pinned_version: str | None,
-        skip_upgrade: bool = False,
+        excluded: bool = False,
     ) -> None:
         self.name = name
         self.installed = installed
@@ -25,7 +25,7 @@ class Package:
         self.type = package_type
         self.pinned_version = pinned_version
         self._info: dict = {}
-        self.skip_upgrade = skip_upgrade
+        self.excluded = excluded
 
     def __str__(self) -> str:
         """Return string representation of Package."""
@@ -86,12 +86,9 @@ class Package:
 
     def upgrade(self, dry_run: bool = False) -> None:
         """Upgrade package."""
-        if self.skip_upgrade:
-            logger.trace(f"Skipping upgrade for {self.name}")
-            return
-
         # Build args for `brew upgrade`
         args = ["upgrade", f"--{self.type.value}"]
+
         if dry_run:
             args.append("--dry-run")
 
@@ -99,6 +96,7 @@ class Package:
             x.lower for x in BrewupConfig().no_quarantine
         ]:
             args.append("--no-quarantine")
+
         if self.type == PackageType.CASKS and BrewupConfig().app_dir:
             args.extend(["--appdir", BrewupConfig().app_dir])  # type: ignore [list-item]
 

@@ -21,16 +21,46 @@ def test_version():
 
 
 @pytest.mark.parametrize(
-    ("has_updates", "terms_in_output"),
+    (
+        "cli_options",
+        "excluded_packages",
+        "has_available_updates",
+        "list_output_terms",
+        "list_negative_terms",
+    ),
     [
-        (False, ["No updates available"]),
+        (["--list"], [], False, ["No updates available"], []),
         (
+            ["--list"],
+            [],
             True,
             ["Available Updates", "arq", "fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+            [],
+        ),
+        (
+            ["--list", "--all"],
+            ["arq"],
+            True,
+            ["Available Updates", "arq", "fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+            [],
+        ),
+        (
+            ["--list", "--excluded"],
+            ["arq"],
+            True,
+            ["Updates excluded by config", "arq", "Multi-cloud"],
+            ["fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+        ),
+        (
+            ["--list", "--excluded"],
+            ["arq"],
+            False,
+            ["No updates available"],
+            ["arq", "fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
         ),
     ],
 )
-def test_dry_run(
+def test_list(
     debug,
     mocker,
     mock_outdated_response,
@@ -39,11 +69,17 @@ def test_dry_run(
     mock_dav1d_info,
     mock_gping_info,
     mock_config,
-    has_updates,
-    terms_in_output,
+    cli_options,
+    has_available_updates,
+    excluded_packages,
+    list_output_terms,
+    list_negative_terms,
 ):
-    """Test dry run."""
-    if not has_updates:
+    """Test list command."""
+    # ###############
+    # Setup the test
+    # ###############
+    if not has_available_updates:
         mock_outdated_response = '{"casks": [], "formulae": []}'
 
     # Mock calls to Homebrew (first call is `brew update`, second is `brew outdated`)
@@ -52,68 +88,25 @@ def test_dry_run(
         side_effect=[None, mock_outdated_response],
     )
 
-    # Mock calls to Homebrew when packages get info
+    # Mock calls to Homebrew when packages call brew info <name>
     mocker.patch(
         "brewup.models.package.run_homebrew",
         side_effect=[mock_arq_info, mock_fork_info, mock_dav1d_info, mock_gping_info],
     )
 
-    with BrewupConfig.change_config_sources(mock_config()):
-        result = runner.invoke(app, ["--dry-run"])
-
-    # debug("result", strip_ansi(result.output))
-
-    assert result.exit_code == 0
-    for term in terms_in_output:
-        assert term in strip_ansi(result.output)
-
-
-@pytest.mark.parametrize(
-    ("has_updates", "has_excludes", "terms_in_output"),
-    [
-        (False, False, ["No updates available"]),
-        (True, False, ["No excluded updates"]),
-        (True, True, ["Updates excluded by config ", "arq"]),
-    ],
-)
-def test_excluded(
-    debug,
-    mocker,
-    mock_outdated_response,
-    mock_arq_info,
-    mock_fork_info,
-    mock_dav1d_info,
-    mock_gping_info,
-    mock_config,
-    has_updates,
-    has_excludes,
-    terms_in_output,
-):
-    """Test dry run."""
-    if not has_updates:
-        mock_outdated_response = '{"casks": [], "formulae": []}'
-
-    # Mock calls to Homebrew (first call is `brew update`, second is `brew outdated`)
-    mocker.patch(
-        "brewup.models.homebrew.run_homebrew",
-        side_effect=[None, mock_outdated_response],
-    )
-
-    # Mock calls to Homebrew when packages get info
-    mocker.patch(
-        "brewup.models.package.run_homebrew",
-        side_effect=[mock_arq_info, mock_fork_info, mock_dav1d_info, mock_gping_info],
-    )
-
-    if not has_excludes:
-        with BrewupConfig.change_config_sources(mock_config()):
-            result = runner.invoke(app, ["--excluded"])
-    if has_excludes:
-        with BrewupConfig.change_config_sources(mock_config(exclude_updades=["arq"])):
-            result = runner.invoke(app, ["--excluded"])
+    # WHEN running the command
+    with BrewupConfig.change_config_sources(mock_config(exclude_updades=excluded_packages)):
+        result = runner.invoke(app, cli_options)
 
     debug("result", strip_ansi(result.output))
 
+    # THEN the output should contain the expected terms
     assert result.exit_code == 0
-    for term in terms_in_output:
+    for term in list_output_terms:
         assert term in strip_ansi(result.output)
+
+    for term in list_negative_terms:
+        assert term not in strip_ansi(result.output)
+
+
+# ###########################################
