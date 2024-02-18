@@ -46,10 +46,10 @@ def log_formatter(record: dict) -> str:
     lvl_color = color_map.get(name, "cyan")
     line_start = line_start_map.get(name, f"{name: <8} | ")
 
-    message = f"[{lvl_color}]{line_start}{{message}}[/{lvl_color}]"
+    msg = f"[{lvl_color}]{line_start}{{message}}[/{lvl_color}]"
     debug = f"[#c5c5c5]({record['name']}:{record['function']}:{record['line']})[/#c5c5c5]"
 
-    return f"{message} {debug}" if name in {"DEBUG", "TRACE"} else message
+    return f"{msg} {debug}" if name in {"DEBUG", "TRACE"} else msg
 
 
 def instantiate_logger(
