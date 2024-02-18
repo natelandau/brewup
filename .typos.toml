@@ -1,0 +1,8 @@
+[default]
+    default.locale = "en_us"
+
+    [default.extend-words]
+        brewup = "brewup" # Package name
+
+[files]
+    extend-exclude = ["*_cache", ".venv"]

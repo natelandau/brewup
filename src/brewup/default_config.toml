@@ -1,0 +1,16 @@
+# Configuration for brewup
+
+# Target location for Applications, mimics --appdir. If empty, uses default
+# app_dir = ""
+
+# List of packages to exclude from updates
+exclude_updades = []
+
+# Update all casks, even if they auto-update
+greedy_casks = false
+
+# Full path to `brew` if not in $PATH
+# homebrew_command = ""
+
+# List of casks to open after updating
+no_quarantine = []

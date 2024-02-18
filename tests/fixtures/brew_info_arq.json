@@ -1,0 +1,75 @@
+{
+  "casks": [
+    {
+      "appcast": null,
+      "artifacts": [
+        {
+          "uninstall": [
+            {
+              "delete": "/Applications/Arq.app",
+              "launchctl": [
+                "com.haystacksoftware.arqagent",
+                "com.haystacksoftware.ArqMonitor"
+              ],
+              "pkgutil": "com.haystacksoftware.Arq",
+              "quit": "com.haystacksoftware.Arq"
+            }
+          ]
+        },
+        {
+          "pkg": [
+            "Arq7.26.6.pkg"
+          ]
+        },
+        {
+          "zap": [
+            {
+              "trash": [
+                "/Library/Application Support/ArqAgent",
+                "/Library/Application Support/ArqAgentAPFS",
+                "~/Library/Application Support/Arq *",
+                "~/Library/Arq *",
+                "~/Library/Preferences/com.haystacksoftware.Arq.plist",
+                "~/Library/Preferences/com.haystacksoftware.ArqMonitor.plist"
+              ]
+            }
+          ]
+        }
+      ],
+      "auto_updates": true,
+      "caveats": null,
+      "conflicts_with": null,
+      "container": null,
+      "depends_on": {},
+      "deprecated": false,
+      "deprecation_date": null,
+      "deprecation_reason": null,
+      "desc": "Multi-cloud backup application",
+      "disable_date": null,
+      "disable_reason": null,
+      "disabled": false,
+      "full_token": "arq",
+      "homepage": "https://www.arqbackup.com/",
+      "installed": null,
+      "installed_time": null,
+      "languages": [],
+      "name": [
+        "Arq"
+      ],
+      "old_tokens": [],
+      "outdated": false,
+      "ruby_source_checksum": {
+        "sha256": "4cff6ecd7f4e1287c23fff4ed5365639955cbf5417ebfd532245371aaaa55911"
+      },
+      "ruby_source_path": "Casks/a/arq.rb",
+      "sha256": "f860d29541f36a9c6726ed49f88e05dcb18b938f2f78dd569aa82937bc712e4c",
+      "tap": "homebrew/cask",
+      "tap_git_head": "f28c4024a8b039753339ed3966fefc6679974bad",
+      "token": "arq",
+      "url": "https://www.arqbackup.com/download/arqbackup/Arq7.26.6.pkg",
+      "url_specs": {},
+      "version": "7.26.6"
+    }
+  ],
+  "formulae": []
+}

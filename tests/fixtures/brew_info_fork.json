@@ -1,0 +1,89 @@
+{
+  "formulae": [
+
+  ],
+  "casks": [
+    {
+      "token": "fork",
+      "full_token": "fork",
+      "old_tokens": [
+
+      ],
+      "tap": "homebrew/cask",
+      "name": [
+        "Fork"
+      ],
+      "desc": "GIT client",
+      "homepage": "https://fork.dev/",
+      "url": "https://cdn.fork.dev/mac/Fork-2.40.dmg",
+      "url_specs": {
+      },
+      "appcast": null,
+      "version": "2.40",
+      "installed": "2.39",
+      "installed_time": 1707345164,
+      "outdated": false,
+      "sha256": "2f735b95ded2a011e65a3f9227fed48136943db7e1bc420e4a32599c355e056c",
+      "artifacts": [
+        {
+          "app": [
+            "Fork.app"
+          ]
+        },
+        {
+          "binary": [
+            "/Applications/Fork.app/Contents/Resources/fork_cli",
+            {
+              "target": "fork"
+            }
+          ]
+        },
+        {
+          "zap": [
+            {
+              "trash": [
+                "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.danpristupov.fork.sfl*",
+                "~/Library/Application Support/com.DanPristupov.Fork",
+                "~/Library/Application Support/Fork",
+                "~/Library/Caches/com.DanPristupov.Fork",
+                "~/Library/Caches/com.plausiblelabs.crashreporter.data/com.DanPristupov.Fork",
+                "~/Library/Cookies/com.DanPristupov.Fork.binarycookies",
+                "~/Library/HTTPStorages/com.DanPristupov.Fork",
+                "~/Library/HTTPStorages/com.DanPristupov.Fork.binarycookies",
+                "~/Library/Logs/Fork.log",
+                "~/Library/Preferences/com.DanPristupov.Fork.plist",
+                "~/Library/Saved Application State/com.DanPristupov.Fork.savedState",
+                "~/Library/WebKit/com.DanPristupov.Fork"
+              ]
+            }
+          ]
+        }
+      ],
+      "caveats": null,
+      "depends_on": {
+        "macos": {
+          ">=": [
+            "10.13"
+          ]
+        }
+      },
+      "conflicts_with": null,
+      "container": null,
+      "auto_updates": true,
+      "deprecated": false,
+      "deprecation_date": null,
+      "deprecation_reason": null,
+      "disabled": false,
+      "disable_date": null,
+      "disable_reason": null,
+      "tap_git_head": "a93670e04b2f7ebe9f3f176eb5b65f9b1cf3de3d",
+      "languages": [
+
+      ],
+      "ruby_source_path": "Casks/f/fork.rb",
+      "ruby_source_checksum": {
+        "sha256": "6974f81745b349ab4fbbefac51113891e697f1ec4f133e38a76d05e52772118c"
+      }
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "formulae": [
+    {
+      "name": "gping",
+      "full_name": "gping",
+      "tap": "homebrew/core",
+      "oldname": null,
+      "oldnames": [
+
+      ],
+      "aliases": [
+
+      ],
+      "versioned_formulae": [
+
+      ],
+      "desc": "Ping, but with a graph",
+      "license": "MIT",
+      "homepage": "https://github.com/orf/gping",
+      "versions": {
+        "stable": "1.16.1",
+        "head": "HEAD",
+        "bottle": true
+      },
+      "urls": {
+        "stable": {
+          "url": "https://github.com/orf/gping/archive/refs/tags/gping-v1.16.1.tar.gz",
+          "tag": null,
+          "revision": null,
+          "using": null,
+          "checksum": "557dad6e54b5dd23f88224ea7914776b7636672f237d9cbbea59972235ca89a8"
+        },
+        "head": {
+          "url": "https://github.com/orf/gping.git",
+          "branch": "master",
+          "using": null
+        }
+      },
+      "revision": 0,
+      "version_scheme": 0,
+      "bottle": {
+        "stable": {
+          "rebuild": 0,
+          "root_url": "https://ghcr.io/v2/homebrew/core",
+          "files": {
+            "arm64_sonoma": {
+              "cellar": ":any",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:6c0b8a00018562a56428730081d2149b75e5d70683f112f258c3dd09287e240a",
+              "sha256": "6c0b8a00018562a56428730081d2149b75e5d70683f112f258c3dd09287e240a"
+            },
+            "arm64_ventura": {
+              "cellar": ":any",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:2f32084a6efef9a3a037b0c9d82299a2258256f6b9b665bbb73fdc8b211b0fd6",
+              "sha256": "2f32084a6efef9a3a037b0c9d82299a2258256f6b9b665bbb73fdc8b211b0fd6"
+            },
+            "arm64_monterey": {
+              "cellar": ":any",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:4668f27d28670807e0e7e39552f7a20e53d1a093e891ad8948b3a0747f1ef81f",
+              "sha256": "4668f27d28670807e0e7e39552f7a20e53d1a093e891ad8948b3a0747f1ef81f"
+            },
+            "sonoma": {
+              "cellar": ":any",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:7d74bf93f8f90500e1e7c9af1cf1f0543dc45f2bd11e3c489a743359874c1859",
+              "sha256": "7d74bf93f8f90500e1e7c9af1cf1f0543dc45f2bd11e3c489a743359874c1859"
+            },
+            "ventura": {
+              "cellar": ":any",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:7efd96965712edc3ebe8a5208758a072d322a1e07b0347838a2400c955111a26",
+              "sha256": "7efd96965712edc3ebe8a5208758a072d322a1e07b0347838a2400c955111a26"
+            },
+            "monterey": {
+              "cellar": ":any",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:352d66ee19e9a3c4fb133687c331c38fb1a3636bf243d0f1ad348a16065274df",
+              "sha256": "352d66ee19e9a3c4fb133687c331c38fb1a3636bf243d0f1ad348a16065274df"
+            },
+            "x86_64_linux": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/gping/blobs/sha256:7a20f09bff83e703cff8bec5adda1a0d8b2e75cb2bda8a182fea048bf55bb1ef",
+              "sha256": "7a20f09bff83e703cff8bec5adda1a0d8b2e75cb2bda8a182fea048bf55bb1ef"
+            }
+          }
+        }
+      },
+      "pour_bottle_only_if": null,
+      "keg_only": false,
+      "keg_only_reason": null,
+      "options": [
+
+      ],
+      "build_dependencies": [
+        "pkg-config",
+        "rust"
+      ],
+      "dependencies": [
+        "libgit2"
+      ],
+      "test_dependencies": [
+
+      ],
+      "recommended_dependencies": [
+
+      ],
+      "optional_dependencies": [
+
+      ],
+      "uses_from_macos": [
+
+      ],
+      "uses_from_macos_bounds": [
+
+      ],
+      "requirements": [
+
+      ],
+      "conflicts_with": [
+
+      ],
+      "conflicts_with_reasons": [
+
+      ],
+      "link_overwrite": [
+
+      ],
+      "caveats": null,
+      "installed": [
+        {
+          "version": "1.16.1",
+          "used_options": [
+
+          ],
+          "built_as_bottle": true,
+          "poured_from_bottle": true,
+          "time": 1708193620,
+          "runtime_dependencies": [
+            {
+              "full_name": "ca-certificates",
+              "version": "2023-12-12",
+              "revision": 0,
+              "pkg_version": "2023-12-12",
+              "declared_directly": false
+            },
+            {
+              "full_name": "openssl@3",
+              "version": "3.2.1",
+              "revision": 0,
+              "pkg_version": "3.2.1",
+              "declared_directly": false
+            },
+            {
+              "full_name": "libssh2",
+              "version": "1.11.0",
+              "revision": 1,
+              "pkg_version": "1.11.0_1",
+              "declared_directly": false
+            },
+            {
+              "full_name": "libgit2",
+              "version": "1.7.2",
+              "revision": 0,
+              "pkg_version": "1.7.2",
+              "declared_directly": true
+            }
+          ],
+          "installed_as_dependency": false,
+          "installed_on_request": true
+        }
+      ],
+      "linked_keg": "1.16.1",
+      "pinned": false,
+      "outdated": false,
+      "deprecated": false,
+      "deprecation_date": null,
+      "deprecation_reason": null,
+      "disabled": false,
+      "disable_date": null,
+      "disable_reason": null,
+      "post_install_defined": false,
+      "service": null,
+      "tap_git_head": "9c9049194ce7cbc4d04a1a9bd7fb26d5c88cf63d",
+      "ruby_source_path": "Formula/g/gping.rb",
+      "ruby_source_checksum": {
+        "sha256": "778751efb2a6f055134e11eaba49aa0ce0dc9bc53d1e3e891d86293d5df3f9e3"
+      }
+    }
+  ],
+  "casks": [
+
+  ]
+}

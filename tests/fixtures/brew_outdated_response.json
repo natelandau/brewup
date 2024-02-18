@@ -1,0 +1,38 @@
+{
+  "casks": [
+    {
+      "current_version": "7.26.6",
+      "installed_versions": [
+        "7.26.3"
+      ],
+      "name": "arq"
+    },
+    {
+      "current_version": "2.40",
+      "installed_versions": [
+        "2.39"
+      ],
+      "name": "fork"
+    }
+  ],
+  "formulae": [
+    {
+      "current_version": "1.4.0",
+      "installed_versions": [
+        "1.3.0"
+      ],
+      "name": "dav1d",
+      "pinned": false,
+      "pinned_version": null
+    },
+    {
+      "current_version": "1.16.1",
+      "installed_versions": [
+        "1.16.0"
+      ],
+      "name": "gping",
+      "pinned": false,
+      "pinned_version": null
+    }
+  ]
+}
