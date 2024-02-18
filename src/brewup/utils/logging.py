@@ -20,19 +20,6 @@ class LogLevel(Enum):
     ERROR = 4
 
 
-class LogLevelIcon(str, Enum):
-    """Emojis for log levels."""
-
-    INFO = ""
-    DEBUG = "🐞 "
-    TRACE = ":wrench: "
-    WARNING = "⚠️ "
-    SUCCESS = "✅ "
-    ERROR = "❌ "
-    CRITICAL = "💀 "
-    EXCEPTION = ""
-
-
 def log_formatter(record: dict) -> str:
     """Use rich to style log messages."""
     color_map = {
@@ -44,11 +31,22 @@ def log_formatter(record: dict) -> str:
         "ERROR": "bold red",
         "CRITICAL": "bold white on red",
     }
+    line_start_map = {
+        "INFO": "",
+        "DEBUG": "🐞 ",
+        "TRACE": ":wrench: ",
+        "WARNING": "⚠️ ",
+        "SUCCESS": "✅ ",
+        "ERROR": "❌ ",
+        "CRITICAL": "💀 ",
+        "EXCEPTION": "",
+    }
+
     name = record["level"].name
     lvl_color = color_map.get(name, "cyan")
-    emoji = LogLevelIcon[name].value
+    line_start = line_start_map.get(name, f"{name: <8} | ")
 
-    message = f"[{lvl_color}]{emoji}{{message}}[/{lvl_color}]"
+    message = f"[{lvl_color}]{line_start}{{message}}[/{lvl_color}]"
     debug = f"[#c5c5c5]({record['name']}:{record['function']}:{record['line']})[/#c5c5c5]"
 
     return f"{message} {debug}" if name in {"DEBUG", "TRACE"} else message
