@@ -30,6 +30,14 @@ def version_callback(value: bool) -> None:
 
 @app.command()
 def main(
+    no_interaction: Annotated[
+        bool,
+        typer.Option(
+            "--all",
+            help="Bypass all prompts and upgrade all packages",
+            show_default=True,
+        ),
+    ] = False,
     dry_run: Annotated[
         bool,
         typer.Option(
@@ -44,15 +52,6 @@ def main(
         typer.Option(
             "--excluded",
             help="Show updates excluded by config",
-            show_default=True,
-        ),
-    ] = False,
-    no_interaction: Annotated[
-        bool,
-        typer.Option(
-            "--no-interaction",
-            "-y",
-            help="Bypass all prompts and upgrade all packages",
             show_default=True,
         ),
     ] = False,
@@ -94,7 +93,32 @@ def main(
         ),
     ] = None,
 ) -> None:
-    """Add application documentation here."""
+    """A CLI that automates upgrading Homebrew and all installed packages.
+
+    \b
+    Brewup runs the following routines in order to keep your system up to date with the latest versions of all installed formulae and casks.
+
+    Note: Brewup will not upgrade packages that are pinned or excluded in the configuration file. It will also not upgrade packages that are not outdated.
+
+        1. brew update
+        2. Upgrades installed packages based on many configuration settings
+        3. brew autoremove
+        4. brew cleanup
+
+    [bold]Usage Examples:[/bold]
+
+    [dim]Select between available upgrades[/dim]
+    brewup
+
+    [dim]Upgrade all available formulae/casks[/dim]
+    brewup --all
+
+    [dim]See all available upgrades but don't upgrade anything[/dim]
+    brewup --dry-run
+
+    [dim]View any excluded formulae/casks with available upgrades[/dim]
+    brewup --excluded
+    """  # noqa: D301
     # Instantiate Logging
     instantiate_logger(verbosity, log_file, log_to_file)
 

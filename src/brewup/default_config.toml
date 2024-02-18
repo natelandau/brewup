@@ -1,7 +1,7 @@
 # Configuration for brewup
 
-# Target location for Applications, mimics --appdird. If empty, uses default
-# app_dir          = ""
+# Target location for Applications, mimics --appdir. If empty, uses default
+# app_dir = ""
 
 # List of packages to exclude from updates
 exclude_updades = []

@@ -1,22 +1,77 @@
 # brewup
 
-Ease common Homebrew commands
+A CLI that automates upgrading Homebrew and all installed packages. Brewup runs the following routines in order to keep your system up to date with the latest versions of all installed formulae and casks.
+
+1. `brew update`
+2. Upgrades installed packages based on many configuration settings
+3. `brew autoremove`
+4. `brew cleanup`
+
+The settings allow for a variety of options including:
+
+-   Excluding specific formulae/casks from being upgraded
+-   Running `brew upgrade` with the `--greedy` flag
+-   Opening casks after upgrading with `open -a {cask}`
+-   Removing specific casks from MacOS quarantine
+-   Select which available formulae/casks to upgrade
 
 ## Install CLI apps
 
-Use [PIPX](https://pypa.github.io/pipx/) to install this package from Github.
-
-```bashpipx install git+https://${GITHUB_TOKEN}@github.com/natelandau/brewup```
-
-Running the above command will install all script entry points as standalone scripts in the users' PATH.
-
-**Note: You must be authenticated on Github for this to work**
-
-**_Alternative_**
-You can install from the local filesystem. This approach will create a link to the _editable version_ of the script which may cause problems if you plan on developing from that directory.
+It is recommended to use [PIPX](https://pypa.github.io/pipx/) to install this package.
 
 ```bash
-pipx install ~/path/to/project
+pipx install brewup
+```
+
+Note: brewup requires Python >= v3.10.
+
+## Usage
+
+Select between available upgrades:
+
+```bash
+brewup
+```
+
+Upgrade all available formulae/casks:
+
+```bash
+brewup --all
+```
+
+See all available upgrades but don't upgrade anything:
+
+```bash
+brewup --dry-run
+```
+
+View any excluded formulae/casks with available upgrades:
+
+```bash
+brewup --excluded
+```
+
+## Configuration
+
+On first run, an empty configuration file will be created at `~/Library/Application Support/brewup/config.toml`. This file can be edited to customize the behavior of brewup.
+
+```toml
+# Configuration for brewup
+
+# Target location for Applications, mimics --appdir. If empty, uses default
+# app_dir = ""
+
+# List of packages to exclude from updates
+exclude_updades = []
+
+# Update all casks, even if they auto-update
+greedy_casks = false
+
+# Full path to `brew` if not in $PATH
+# homebrew_command = ""
+
+# List of casks to open after updating
+no_quarantine = []
 ```
 
 ## Contributing
