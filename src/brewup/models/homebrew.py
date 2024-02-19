@@ -70,6 +70,7 @@ class Homebrew:
             run_homebrew(["autoremove", "--dry-run"])
         else:
             run_homebrew(["autoremove"])
+        logger.success("Autoremove packages")
 
     @staticmethod
     def cleanup(dry_run: bool = False) -> None:
