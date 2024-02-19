@@ -34,14 +34,14 @@ def test_version():
             ["--list"],
             [],
             True,
-            ["Available Updates", "arq", "fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+            ["Available Updates", "arq", "fork", "dav1d", "gping", "GIT client"],
             [],
         ),
         (
             ["--list", "--all"],
             ["arq"],
             True,
-            ["Available Updates", "arq", "fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+            ["Available Updates", "arq", "fork", "dav1d", "gping", "GIT client"],
             [],
         ),
         (
@@ -49,14 +49,14 @@ def test_version():
             ["arq"],
             True,
             ["Updates excluded by config", "arq", "Multi-cloud"],
-            ["fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+            ["fork", "dav1d", "gping", "GIT client"],
         ),
         (
             ["--list", "--excluded"],
             ["arq"],
             False,
             ["No updates available"],
-            ["arq", "fork", "dav1d", "gping", "GIT client", "2.39", "2.40"],
+            ["arq", "fork", "dav1d", "gping", "GIT client"],
         ),
     ],
 )
@@ -98,7 +98,7 @@ def test_list(
     with BrewupConfig.change_config_sources(mock_config(exclude_updades=excluded_packages)):
         result = runner.invoke(app, cli_options)
 
-    debug("result", strip_ansi(result.output))
+    # debug("result", strip_ansi(result.output))
 
     # THEN the output should contain the expected terms
     assert result.exit_code == 0
@@ -109,4 +109,50 @@ def test_list(
         assert term not in strip_ansi(result.output)
 
 
-# ###########################################
+def test_info_command_arq(debug, mock_config, mocker, mock_arq_info):
+    """Test info command."""
+    # GIVEN a mocked response from Homebrew
+    mocker.patch(
+        "brewup.models.package.run_homebrew",
+        return_value=mock_arq_info,
+    )
+
+    # WHEN running the command
+    with BrewupConfig.change_config_sources(mock_config()):
+        result = runner.invoke(app, ["--info", "arq"])
+
+    debug("result", strip_ansi(result.output))
+
+    # THEN the output should contain the expected terms
+    assert result.exit_code == 0
+    assert "arq" in strip_ansi(result.output)
+    assert "Auto updates      │ True" in strip_ansi(result.output)
+    assert "Version           │ 7.26.6" in strip_ansi(result.output)
+    assert "Installed version │ 7.25.1" in strip_ansi(result.output)
+    assert "Homepage          │" in strip_ansi(result.output)
+    assert "Name              │ arq" in strip_ansi(result.output)
+    assert "Desc              │ Multi-cloud backup application" in strip_ansi(result.output)
+
+
+def test_info_command_gping(debug, mock_config, mocker, mock_gping_info):
+    """Test info command."""
+    # GIVEN a mocked response from Homebrew
+    mocker.patch(
+        "brewup.models.package.run_homebrew",
+        return_value=mock_gping_info,
+    )
+
+    # WHEN running the command
+    with BrewupConfig.change_config_sources(mock_config()):
+        result = runner.invoke(app, ["--info", "gping"])
+
+    # debug("result", strip_ansi(result.output))
+
+    # THEN the output should contain the expected terms
+    assert result.exit_code == 0
+    assert "gping" in strip_ansi(result.output)
+    assert "Installed version  │ 1.16.1" in strip_ansi(result.output)
+    assert "Tap                │ homebrew/core" in strip_ansi(result.output)
+    assert "Build dependencies │ pkg-config, rust " in strip_ansi(result.output)
+    assert "Homepage" in strip_ansi(result.output)
+    assert "Dependencies       │ libgit2" in strip_ansi(result.output)

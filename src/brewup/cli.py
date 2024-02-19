@@ -11,7 +11,7 @@ from pydantic import ValidationError
 
 from brewup.__version__ import __version__
 from brewup.constants import APP_DIR, CONFIG_PATH
-from brewup.models import Homebrew
+from brewup.models import Homebrew, Package
 from brewup.utils import console, instantiate_logger, rule
 from brewup.views import choose_packages, update_table
 
@@ -61,6 +61,10 @@ def main(
             help="Bypass configuration file to control passing the --greedy flag to brew outdated",
             show_default=False,
         ),
+    ] = None,
+    info_option: Annotated[
+        Optional[str],
+        typer.Option("--info", help="Find information about a formula or cask", show_default=False),
     ] = None,
     list_upgradable: Annotated[
         bool,
@@ -166,6 +170,13 @@ def main(
             console.print(f"           [red]{error['loc'][0]}: {error['msg']}[/red]")
         raise typer.Exit(code=1) from e
 
+    # Find information about a formula or cask
+    if info_option:
+        package = Package(name=info_option)
+        console.print(package.info_table())
+        raise typer.Exit()
+
+    # Update Homebrew and work with outdated packages
     h = Homebrew(greedy=greedy)
     h.update()
     rule("Upgrade packages" if not list_upgradable else "Identify outdated packages")
@@ -194,8 +205,8 @@ def main(
     for i in choose_packages(packages=filtered_updates, select_all=not select_packages):
         i.upgrade(dry_run=dry_run)
 
-    h.autoremove(dry_run=dry_run)
     h.cleanup(dry_run=dry_run)
+    h.autoremove(dry_run=dry_run)
 
 
 if __name__ == "__main__":

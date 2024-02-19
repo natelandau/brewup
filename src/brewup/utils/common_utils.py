@@ -31,8 +31,12 @@ def run_homebrew(args: list[str], quiet: bool = False) -> str:
         try:
             return homebrew(*args)
         except sh.ErrorReturnCode as e:
-            logger.error(f"Could not run `{e.full_cmd}`")
-            console.print(e.stderr.decode("utf-8"))
+            if args[0] == "info":
+                logger.error(e.stderr.decode("utf-8").removeprefix("Error: "))
+            else:
+                logger.error(f"Could not run `{e.full_cmd}`")
+                console.print(e.stderr.decode("utf-8"))
+
             raise typer.Exit(1) from e
 
     try:

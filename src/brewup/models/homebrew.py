@@ -71,6 +71,8 @@ class Homebrew:
         else:
             run_homebrew(["autoremove"])
 
+        logger.success("Autoremove packages")
+
     @staticmethod
     def cleanup(dry_run: bool = False) -> None:
         """Cleanup Homebrew."""
@@ -79,3 +81,5 @@ class Homebrew:
             run_homebrew(["cleanup", "--dry-run"])
         else:
             run_homebrew(["cleanup"])
+
+        logger.success("Cleanup Homebrew")
