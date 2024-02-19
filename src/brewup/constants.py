@@ -12,6 +12,7 @@ class PackageType(str, Enum):
 
     FORMULAE = "formulae"
     CASKS = "casks"
+    UNKNOWN = "unknown"
 
 
 APP_DIR = Path(typer.get_app_dir("brewup"))

@@ -1,7 +1,9 @@
 """Model for a Homebrew formulae or cask."""
 import json
+import re
 
 from loguru import logger
+from rich.table import Table
 
 from brewup.constants import PackageType
 from brewup.utils import BrewupConfig, run_command, run_homebrew
@@ -13,32 +15,62 @@ class Package:
     def __init__(
         self,
         name: str,
-        package_type: PackageType,
-        installed: list[str],
-        current: str,
-        pinned_version: str | None,
+        package_type: PackageType = PackageType.UNKNOWN,
+        installed: list[str | dict] = [],
+        current: str | None = None,
+        pinned_version: str | None = None,
         excluded: bool = False,
     ) -> None:
-        self.name = name
-        self.installed = installed
-        self.current = current
-        self.type = package_type
-        self.pinned_version = pinned_version
         self._info: dict = {}
+        self.name = name
+        self._type = package_type
+
+        self.installed = self._get_installed_version(installed)
+        self.current = current
+
+        self.pinned_version = pinned_version
         self.excluded = excluded
 
     def __str__(self) -> str:
         """Return string representation of Package."""
-        return f"{self.name} ({self.type}) - {self.installed[0]} -> {self.current}"
+        return f"{self.name} ({self.type.value}): {self.installed[0]} -> {self.current}"
+
+    def _get_installed_version(self, user_input: str | list[str | dict] | None = None) -> str:
+        """Return list of installed version."""
+        if user_input:
+            if isinstance(user_input, list):
+                if isinstance(user_input[0], dict):
+                    return user_input[0]["version"]
+                return user_input[0]
+
+            return user_input
+
+        if not (installed := self.info.get("installed")):
+            return ""
+
+        if isinstance(installed, list):
+            return installed[0]["version"]
+
+        return installed
 
     @property
     def info(self) -> dict:
-        """Return package info."""
+        """Return package info and set self.type if not already set."""
+        args = ["info", "--json=v2"]
+        if self._type != PackageType.UNKNOWN:
+            args.append(f"--{self._type.value}")
+        args.append(self.name)
+
         if not self._info:
-            brew_info_output = json.loads(
-                run_homebrew(["info", "--json=v2", f"--{self.type.value}", self.name], quiet=True)
-            )
-            self._info = brew_info_output[self.type.value][0]
+            brew_info_output = json.loads(run_homebrew(args, quiet=True))
+            if self._type != PackageType.UNKNOWN:
+                self._info = brew_info_output[self.type.value][0]
+            elif len(brew_info_output["formulae"]) > 0:
+                self._info = brew_info_output["formulae"][0]
+                self._type = PackageType.FORMULAE
+            elif len(brew_info_output["casks"]) > 0:
+                self._info = brew_info_output["casks"][0]
+                self._type = PackageType.CASKS
 
         return self._info
 
@@ -66,6 +98,15 @@ class Package:
         """Return package homepage."""
         return self.info.get("homepage", "")
 
+    @property
+    def type(self) -> PackageType:
+        """Return package type."""
+        if self._type == PackageType.UNKNOWN:
+            info = self.info
+            logger.trace(f"identifying package type from info: {info}")
+
+        return self._type
+
     def _open_cask(self) -> None:
         """Reopen cask if it was closed."""
         if (
@@ -84,8 +125,85 @@ class Package:
         ):
             logger.success(f"Unquarantined {self.name}")
 
+    def info_table(self) -> Table:
+        """Return a table of package info."""
+        table = Table(
+            title=f"[bold]{self.name}[/bold]\n[italic]{self.description}[/italic]",
+            title_style="",
+            show_lines=True,
+            show_header=False,
+        )
+        table.add_column("Key", style="cyan")
+        table.add_column("Value")
+
+        for key, value in self.info.items():
+            if key in {
+                "aliases",
+                "artifacts",
+                "bottle",
+                "depends_on",
+                "head_dependencies",
+                "installed_time",
+                "installed",
+                "license",
+                "link_overwrite",
+                "linked_keg",
+                "name",
+                "oldname",
+                "post_install_defined",
+                "pour_bottle_only_if",
+                "revision",
+                "ruby_source_checksum",
+                "ruby_source_path",
+                "sha256",
+                "tap_git_head",
+                "token",
+                "url_specs",
+                "url",
+                "urls",
+                "uses_from_macos_bounds",
+                "versions",
+            }:
+                continue
+
+            if value:
+                if key in {"full_name", "full_token"}:
+                    table.add_row("Name", str(value))
+                    table.add_row("Installed version", self.installed)
+                    table.add_row("type", self.type.value)
+                    continue
+
+                if key == "homepage":
+                    table.add_row("Homepage", f"[link={value}]{value}[/link]")
+                    continue
+
+                if key == "keg_only_reason":
+                    table.add_row("Keg only reason", str(value["reason"].lstrip(":")))
+                    continue
+
+                if re.search(
+                    r"conflicts_with|dependencies|requirements|uses_from_macos|oldnames|versioned_formulae",
+                    key,
+                ):
+                    v = (
+                        ", ".join([x for x in value if isinstance(x, str)])
+                        if isinstance(value, list)
+                        else value
+                    )
+                    table.add_row(str(key).replace("_", " ").capitalize(), str(v))
+                    continue
+
+                table.add_row(str(key).replace("_", " ").capitalize(), str(value))
+
+        return table
+
     def upgrade(self, dry_run: bool = False) -> None:
         """Upgrade package."""
+        # Skip if no current version to upgrade to
+        if not self.current:
+            logger.warning(f"Skipping {self.name} - no current version")
+            return
+
         # Build args for `brew upgrade`
         args = ["upgrade", f"--{self.type.value}"]
 
