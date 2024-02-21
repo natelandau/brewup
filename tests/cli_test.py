@@ -5,8 +5,8 @@
 import pytest
 from typer.testing import CliRunner
 
-from brewup.__version__ import __version__
 from brewup.cli import app
+from brewup.constants import VERSION
 from brewup.utils import BrewupConfig
 from tests.helpers import strip_ansi
 
@@ -17,7 +17,7 @@ def test_version():
     """Test printing version and then exiting."""
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert f"brewup version: {__version__}" in strip_ansi(result.output)
+    assert f"brewup version: {VERSION}" in strip_ansi(result.output)
 
 
 @pytest.mark.parametrize(

@@ -18,6 +18,7 @@ class PackageType(str, Enum):
 APP_DIR = Path(typer.get_app_dir("brewup"))
 CONFIG_PATH = APP_DIR / "config.toml"
 SPINNER = "bouncingBall"
+VERSION = "0.2.0"
 CHOICE_STYLE = Style(
     [
         ("highlighted", ""),  # hover state

@@ -9,8 +9,7 @@ from confz import validate_all_configs
 from loguru import logger
 from pydantic import ValidationError
 
-from brewup.__version__ import __version__
-from brewup.constants import APP_DIR, CONFIG_PATH
+from brewup.constants import APP_DIR, CONFIG_PATH, VERSION
 from brewup.models import Homebrew, Package
 from brewup.utils import console, instantiate_logger, rule
 from brewup.views import choose_packages, update_table
@@ -23,7 +22,7 @@ typer.rich_utils.STYLE_HELPTEXT = ""
 def version_callback(value: bool) -> None:
     """Print version and exit."""
     if value:
-        console.print(f"{__package__} version: {__version__}")
+        console.print(f"{__package__} version: {VERSION}")
         raise typer.Exit()
 
 
