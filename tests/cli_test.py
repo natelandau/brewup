@@ -1,7 +1,6 @@
 # type: ignore
 """Test brewup CLI."""
 
-
 import pytest
 from typer.testing import CliRunner
 

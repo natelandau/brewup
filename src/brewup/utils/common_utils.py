@@ -1,4 +1,5 @@
 """Common utility functions for brewup."""
+
 import sys
 
 import sh

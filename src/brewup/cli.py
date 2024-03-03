@@ -14,8 +14,12 @@ from brewup.models import Homebrew, Package
 from brewup.utils import console, instantiate_logger, rule
 from brewup.views import choose_packages, update_table
 
-app = typer.Typer(add_completion=False, no_args_is_help=True, rich_markup_mode="rich")
-app_dir = typer.get_app_dir("brewup")
+app = typer.Typer(
+    add_completion=False,
+    no_args_is_help=True,
+    rich_markup_mode="rich",
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
 typer.rich_utils.STYLE_HELPTEXT = ""
 
 

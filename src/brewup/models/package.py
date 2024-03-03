@@ -1,4 +1,5 @@
 """Model for a Homebrew formulae or cask."""
+
 import json
 import re
 
