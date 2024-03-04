@@ -1,4 +1,5 @@
 """Model for a Homebrew formulae or cask."""
+
 import json
 import re
 
@@ -6,7 +7,13 @@ from loguru import logger
 from rich.table import Table
 
 from brewup.constants import PackageType
-from brewup.utils import BrewupConfig, run_command, run_homebrew
+from brewup.utils import (
+    BrewupConfig,
+    package_used_by,
+    run_command,
+    run_homebrew,
+    top_level_packages,
+)
 
 
 class Package:
@@ -107,6 +114,11 @@ class Package:
 
         return self._type
 
+    @property
+    def is_top_level(self) -> bool:
+        """Return True if package is top level."""
+        return self.name in top_level_packages()
+
     def _open_cask(self) -> None:
         """Reopen cask if it was closed."""
         if (
@@ -167,12 +179,18 @@ class Package:
                 continue
 
             if value:
+                # Top of the table
                 if key in {"full_name", "full_token"}:
                     table.add_row("Name", str(value))
                     table.add_row("Installed version", self.installed)
+                    table.add_row("Top Level Install", str(self.is_top_level))
                     table.add_row("type", self.type.value)
+                    used_by = package_used_by(self.name)
+                    if used_by:
+                        table.add_row("Used by", ", ".join(package_used_by(self.name)))
                     continue
 
+                # Add roes based on key
                 if key == "homepage":
                     table.add_row("Homepage", f"[link={value}]{value}[/link]")
                     continue

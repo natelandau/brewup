@@ -1,5 +1,8 @@
 """Common utility functions for brewup."""
+
+import re
 import sys
+from functools import cache
 
 import sh
 import typer
@@ -99,3 +102,28 @@ def rule(msg: str) -> None:
     msg_style = "bold cyan"
     console.print()
     console.rule(f"[{msg_style}]{msg.upper()}[/{msg_style}]", align="left", style=rule_style)
+
+
+@cache
+def top_level_packages() -> list[str]:
+    """List all top-level installed packages.
+
+    Returns:
+        list[str]: List of top-level installed packages.
+    """
+    packages = run_homebrew(["leaves", "-r"], quiet=True).splitlines()
+    return [pkg for pkg in packages if pkg]
+
+
+def package_used_by(package: str) -> list[str]:
+    """List all packages that depend on a given package.
+
+    Args:
+        package (str): The package to check.
+
+    Returns:
+        list[str]: List of packages that depend on the given package.
+    """
+    response = run_homebrew(["uses", "--installed", package], quiet=True)
+
+    return [x for x in re.split(r"\s+", response.strip()) if x]

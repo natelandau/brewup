@@ -73,12 +73,16 @@ jobs:
             # ----------------------------------------------
 
             - name: lint with ruff
-              run: poetry run ruff --extend-ignore=I001,D401 src/
+              run: poetry run ruff src/
+
             - name: check pyproject.toml
               run: poetry run poetry check
 
             # ----------------------------------------------
             #    run test suite
             # ----------------------------------------------
+            - name: run cli --help
+              run: poetry run brewup --help
+
             - name: Run tests with pytest
-              run: poetry run pytest tests/
+              run: poetry run pytest -svv tests/
