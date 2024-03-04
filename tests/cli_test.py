@@ -4,7 +4,7 @@
 import pytest
 from typer.testing import CliRunner
 
-from brewup.cli import app
+from brewup.brewup import app
 from brewup.constants import VERSION
 from brewup.utils import BrewupConfig
 from tests.helpers import strip_ansi
@@ -86,8 +86,6 @@ def test_list(
         "brewup.models.homebrew.run_homebrew",
         side_effect=[None, mock_outdated_response],
     )
-
-    # Mock calls to Homebrew when packages call brew info <name>
     mocker.patch(
         "brewup.models.package.run_homebrew",
         side_effect=[mock_arq_info, mock_fork_info, mock_dav1d_info, mock_gping_info],
@@ -115,12 +113,15 @@ def test_info_command_arq(debug, mock_config, mocker, mock_arq_info):
         "brewup.models.package.run_homebrew",
         return_value=mock_arq_info,
     )
+    mocker.patch("brewup.models.package.top_level_packages", return_value=["arq"])
+    mocker.patch("brewup.models.package.package_used_by", return_value=[])
 
     # WHEN running the command
+
     with BrewupConfig.change_config_sources(mock_config()):
         result = runner.invoke(app, ["--info", "arq"])
 
-    debug("result", strip_ansi(result.output))
+    # debug("result", strip_ansi(result.output))
 
     # THEN the output should contain the expected terms
     assert result.exit_code == 0
@@ -140,12 +141,14 @@ def test_info_command_gping(debug, mock_config, mocker, mock_gping_info):
         "brewup.models.package.run_homebrew",
         return_value=mock_gping_info,
     )
+    mocker.patch("brewup.models.package.top_level_packages", return_value=[])
+    mocker.patch("brewup.models.package.package_used_by", return_value=[])
 
     # WHEN running the command
     with BrewupConfig.change_config_sources(mock_config()):
         result = runner.invoke(app, ["--info", "gping"])
 
-    # debug("result", strip_ansi(result.output))
+    debug("result", strip_ansi(result.output))
 
     # THEN the output should contain the expected terms
     assert result.exit_code == 0

@@ -14,7 +14,7 @@
     version     = "0.2.0"
 
     [tool.poetry.scripts] # https://python-poetry.org/docs/pyproject/#scripts
-        brewup = "brewup.cli:app"
+        brewup = "brewup.brewup:app"
 
     [tool.poetry.dependencies]
         confz       = "^2.0.1"
@@ -167,7 +167,7 @@
             "UP007",   # non-pep604-annotation
         ]
         ignore-init-module-imports = true
-        per-file-ignores = { "cli.py" = [
+        per-file-ignores = { "brewup.py" = [
             "PLR0912",
             "PLR0913",
             "PLR0917",
