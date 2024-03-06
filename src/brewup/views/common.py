@@ -67,7 +67,7 @@ def update_table(packages: list[Package], title: str | None = None) -> Table | s
             package.name,
             package.description,
             package.type,
-            package.installed[0],
+            package.installed,
             package.current,
         )
 
