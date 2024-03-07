@@ -1,3 +1,9 @@
+## v0.3.1 (2024-03-07)
+
+### Fix
+
+- display full current version in `--list` (#6)
+
 ## v0.3.0 (2024-03-04)
 
 ### Feat
