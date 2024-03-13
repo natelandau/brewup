@@ -20,15 +20,17 @@ class Homebrew:
 
     @staticmethod
     def update() -> None:
-        """Update Homebrew."""
+        """Update the Homebrew installation to the latest version."""
         rule("brew update")
         run_homebrew(["update"])
 
     def available_updates(self) -> list[Package]:
-        """Get a list of available updates.
+        """Get a list of available updates for installed packages.
+
+        This method considers the instance's greedy setting and the global configuration to determine if greedy updates should be applied. Packages excluded from updates in the BrewupConfig are not included in the returned list.
 
         Returns:
-            list[Package]: A list of Package objects representing available updates.
+            list[Package]: A list of Package objects representing available updates. Each Package object includes the package name, type, installed versions, current version, and whether it's pinned or excluded.
         """
         with Progress(console=console, transient=True) as progress:
             progress.add_task("Identify outdated packages", total=None)
@@ -64,7 +66,11 @@ class Homebrew:
 
     @staticmethod
     def autoremove(dry_run: bool = False) -> None:
-        """Autoremove packages."""
+        """Remove unneeded packages that were automatically installed as dependencies.
+
+        Args:
+            dry_run: If True, runs the command in dry-run mode to show what would be removed without actually removing anything. Defaults to False.
+        """
         rule("brew autoremove")
         if dry_run:
             run_homebrew(["autoremove", "--dry-run"])
@@ -75,7 +81,11 @@ class Homebrew:
 
     @staticmethod
     def cleanup(dry_run: bool = False) -> None:
-        """Cleanup Homebrew."""
+        """Cleanup old versions of installed packages and clear the cache.
+
+        Args:
+            dry_run: If True, runs the command in dry-run mode to show what would be cleaned up without actually performing the cleanup. Defaults to False.
+        """
         rule("brew cleanup")
         if dry_run:
             run_homebrew(["cleanup", "--dry-run"])
