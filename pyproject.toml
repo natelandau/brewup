@@ -260,7 +260,7 @@
         help = "Lint this package"
 
         [[tool.poe.tasks.lint.sequence]]
-            shell = "ruff --preview --no-fix src/"
+            shell = "ruff check --preview --no-fix src/"
 
         [[tool.poe.tasks.lint.sequence]]
             shell = "ruff format --check src/ tests/"
