@@ -130,7 +130,7 @@ def rule(msg: str) -> None:
     rule_style = "bold cyan"
     msg_style = "bold cyan"
     console.print()
-    console.rule(f"[{msg_style}]{msg.upper()}[/{msg_style}]", align="left", style=rule_style)
+    console.rule(f"[{msg_style}]── {msg.upper()}[/{msg_style}]", align="left", style=rule_style)
 
 
 @cache
