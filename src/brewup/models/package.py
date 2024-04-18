@@ -17,7 +17,12 @@ from brewup.utils import (
 
 
 class Package:
-    """Model for a Homebrew formulae or cask."""
+    """Represents a Homebrew package, either a formula or a cask.
+
+    This class models a Homebrew package, encapsulating information such as its name, type,
+    installed versions, current version, pinned version, and exclusion status from upgrade
+    operations.
+    """
 
     def __init__(
         self,
@@ -120,7 +125,12 @@ class Package:
         return self.name in top_level_packages()
 
     def _open_cask(self) -> None:
-        """Reopen cask if it was closed."""
+        """Reopens the application associated with a cask, if applicable.
+
+        This method is used to automatically reopen a cask's application if it was closed during
+        an update process. It checks if the package is a cask and matches any entries in a list
+        of casks configured to be reopened. If so, it attempts to reopen the application by its path.
+        """
         if (
             self.type == PackageType.CASKS
             and self.name.lower() in [x.lower for x in BrewupConfig().reopen_casks]
@@ -129,7 +139,13 @@ class Package:
             logger.success(f"Reopen {self.name}")
 
     def _unquarantine_cask(self) -> None:
-        """Unquarantine cask."""
+        """Removes the quarantine attribute from a cask application.
+
+        This method checks if the package is a cask and if its name matches any entries in a
+        predefined list of casks to be unquarantined. If both conditions are met, it executes
+        a command to remove the quarantine attribute from the application's path, effectively
+        unquarantining the cask.
+        """
         if (
             self.type == PackageType.CASKS
             and self.name.lower() in [x.lower for x in BrewupConfig().no_quarantine]
@@ -138,7 +154,16 @@ class Package:
             logger.success(f"Unquarantined {self.name}")
 
     def info_table(self) -> Table:
-        """Return a table of package info."""
+        """Generates a detailed information table for the package.
+
+        This method compiles detailed information about the package into a visually appealing table.
+        It filters out certain keys that are not relevant for display and organizes the remaining
+        information in a key-value format. The table includes the package's name, its description,
+        installation status, type, dependencies, and more, depending on available data.
+
+        Returns:
+            A `Table` object containing the formatted information about the package.
+        """
         table = Table(
             title=f"[bold]{self.name}[/bold]\n[italic]{self.description}[/italic]",
             title_style="",
@@ -216,7 +241,17 @@ class Package:
         return table
 
     def upgrade(self, dry_run: bool = False) -> None:
-        """Upgrade package."""
+        """Upgrades the package to its latest version, with optional dry run mode.
+
+        Initiates the upgrade process for the package using Homebrew commands, constructing the
+        command based on the package's type (formula or cask) and additional configuration such
+        as no quarantine for casks or specifying an app directory. It supports a dry run option
+        for testing purposes.
+
+        Args:
+            dry_run: If True, performs a dry run of the upgrade process without actually updating
+                 the package. Defaults to False.
+        """
         # Skip if no current version to upgrade to
         if not self.current:
             logger.warning(f"Skipping {self.name} - no current version")

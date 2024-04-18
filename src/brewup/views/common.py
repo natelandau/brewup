@@ -10,14 +10,22 @@ from brewup.models import Package
 
 
 def choose_packages(packages: list[Package], select_all: bool = False) -> list[Package]:
-    """Select packages to upgrade.
+    """Selects packages to upgrade from a list of package objects.
+
+    Present a checkbox selection interface to the user if `select_all` is False,
+    allowing users to choose which packages they want to upgrade. If `select_all` is True, all
+    packages are automatically selected for upgrade.
 
     Args:
-        packages (list[Package]): List of packages.
-        select_all (bool, optional): Select all packages. Defaults to False.
+        packages: A list of `Package` objects representing the available packages for upgrade.
+        select_all: If True, automatically selects all packages without user interaction.
+                    Defaults to False.
 
     Returns:
-        list[Package]: List of selected packages.
+        A list of `Package` objects that were selected for upgrade.
+
+    Raises:
+        typer.Exit: If no packages are selected or if the selection process is cancelled.
     """
     if select_all:
         return packages
@@ -38,14 +46,18 @@ def choose_packages(packages: list[Package], select_all: bool = False) -> list[P
 
 
 def update_table(packages: list[Package], title: str | None = None) -> Table | str:
-    """Display a table of available updates.
+    """Generates a table displaying available package updates or a message if there are none.
+
+    Create a table with detailed information about each package that needs to be updated. If there
+    are no packages to update, it returns a message indicating that all packages are up-to-date.
 
     Args:
-        packages (list[Package]): List of packages.
-        title (str): T
+        packages: A list of `Package` objects to be displayed in the table.
+        title: An optional title for the table. If not provided, defaults to "Available Updates".
 
     Returns:
-        Table | str: Table of packages or message.
+        A `Table` object with the package update information or a string message if there are no
+        updates available.
     """
     if not title:
         title = "Available Updates"

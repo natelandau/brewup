@@ -14,17 +14,25 @@ from .console import console
 
 
 def run_homebrew(args: list[str], quiet: bool = False) -> str:
-    """Run a Homebrew command.
+    """Executes a given Homebrew command with specified arguments.
+
+    This function runs a Homebrew command based on the given list of arguments. It can optionally
+    run in a quiet mode, suppressing the output to the standard output and only returning the
+    result. If the command execution fails, it raises an exception.
 
     Args:
-        args (list[str]): List of arguments for the Homebrew command.
-        quiet (bool, optional): Whether to suppress output. Defaults to False.
+        args: A list of strings representing the arguments to pass to the Homebrew command. The
+              first element should be the Homebrew command (e.g., 'update', 'install').
+        quiet: If True, suppresses the command's output. If False, the command's output is printed
+               to the console. Defaults to False.
 
     Returns:
-        str: Output of the Homebrew command.
+        A string containing the output of the Homebrew command if `quiet` is True, otherwise an
+        empty string.
 
     Raises:
-        typer.Exit: If the command fails.
+        typer.Exit: An error is raised with exit code 1 if the Homebrew command fails to execute
+                    properly, providing error details in the console.
     """
     homebrew = sh.Command(BrewupConfig().homebrew_command)
     command_as_string = f"{BrewupConfig().homebrew_command} {' '.join(args)}"
@@ -56,16 +64,27 @@ def run_homebrew(args: list[str], quiet: bool = False) -> str:
 def run_command(
     cmd: str, args: list[str], exit_on_fail: bool = False, quiet: bool = False
 ) -> str | bool:
-    """Run a command.
+    """Runs a specified command with arguments, controlling output and exit behavior.
+
+    This function allows for the execution of any command with a list of arguments. It provides
+    control over whether the program should exit on a command failure and whether the output
+    should be suppressed.
 
     Args:
-        cmd (str): The command to run.
-        args (list[str]): List of arguments for the command.
-        exit_on_fail (bool, optional): Whether to exit the program if the command fails. Defaults to False.
-        quiet (bool, optional): Whether to suppress output. Defaults to False.
+        cmd: The command to be executed, as a string.
+        args: A list of strings representing the arguments for the command.
+        exit_on_fail: If True, the program will exit if the command fails to execute successfully.
+                      Defaults to False.
+        quiet: If True, suppresses the output of the command, only showing errors. Defaults to False.
 
     Returns:
-        str | bool: Output of the command or False if the command fails.
+        If quiet is False and the command executes successfully, returns True.
+        If the command fails and exit_on_fail is False, returns False.
+        Otherwise, the output of the command as a string if quiet is True and the command executes successfully.
+
+    Raises:
+        typer.Exit: If exit_on_fail is True and the command fails to execute, it will raise a
+                    typer.Exit exception to halt the program.
     """
     command = sh.Command(cmd)
     command_as_string = f"{cmd} {' '.join(args)}"
@@ -97,32 +116,49 @@ def run_command(
 
 
 def rule(msg: str) -> None:
-    """Print a rule."""
+    """Prints a horizontal rule with a message.
+
+    This function prints a styled horizontal rule followed by a given message. The message is
+    converted to uppercase and displayed with the rule.
+
+    Args:
+        msg: The message to display alongside the rule.
+
+    Note:
+        The rule and message are styled in bold cyan.
+    """
     rule_style = "bold cyan"
     msg_style = "bold cyan"
     console.print()
-    console.rule(f"[{msg_style}]{msg.upper()}[/{msg_style}]", align="left", style=rule_style)
+    console.rule(f"[{msg_style}]── {msg.upper()}[/{msg_style}]", align="left", style=rule_style)
 
 
 @cache
 def top_level_packages() -> list[str]:
-    """List all top-level installed packages.
+    """Retrieves a list of all top-level installed packages using Homebrew.
+
+    This function executes the Homebrew command to list all top-level (not dependencies of another)
+    packages that are currently installed. It utilizes caching to avoid repeated executions for the
+    same information.
 
     Returns:
-        list[str]: List of top-level installed packages.
+        A list of strings, where each string is the name of a top-level installed package.
     """
     packages = run_homebrew(["leaves", "-r"], quiet=True).splitlines()
     return [pkg for pkg in packages if pkg]
 
 
 def package_used_by(package: str) -> list[str]:
-    """List all packages that depend on a given package.
+    """Finds all installed Homebrew packages that depend on a specified package.
+
+    This function queries Homebrew to find all installed packages that have the specified package
+    as a dependency.
 
     Args:
-        package (str): The package to check.
+        package: The name of the package to check for dependents.
 
     Returns:
-        list[str]: List of packages that depend on the given package.
+        A list of package names that depend on the specified package.
     """
     response = run_homebrew(["uses", "--installed", package], quiet=True)
 
