@@ -27,7 +27,7 @@
         typer       = "^0.12.3"
 
     [tool.poetry.group.test.dependencies]
-        pytest                 = "^8.1.1"
+        pytest                 = "^8.2.0"
         pytest-asyncio         = "^0.23.6"
         pytest-clarity         = "^1.0.1"
         pytest-env             = "^1.1.3"
@@ -38,14 +38,15 @@
 
     [tool.poetry.group.dev.dependencies]
         commitizen    = "^3.24.0"
-        coverage      = "^7.4.4"
-        mypy          = "^1.9.0"
+        coverage      = "^7.5.0"
+        mypy          = "^1.10.0"
         pdoc          = "^14.4.0"
-        poethepoet    = "^0.25.1"
+        poethepoet    = "^0.26.0"
         pre-commit    = "^3.7.0"
-        ruff          = "^0.3.7"
+        ruff          = "^0.4.4"
         shellcheck-py = "^0.9.0.5"
-        typos         = "^1.20.9"
+        typos         = "^1.20.10"
+        yamllint      = "^1.35.1"
 
 [tool.commitizen]
     bump_message               = "bump(release): v$current_version → v$new_version"
@@ -167,7 +168,6 @@
             "S311",    # suspicious-non-cryptographic-random-usage
             "UP007",   # non-pep604-annotation
         ]
-        ignore-init-module-imports = true
         per-file-ignores = { "brewup.py" = [
             "PLR0912",
             "PLR0913",
@@ -247,15 +247,6 @@
     skip-magic-trailing-comma = false
 
 [tool.poe.tasks]
-
-    [tool.poe.tasks.docs]
-        cmd = """
-    pdoc
-      --docformat google
-      --output-directory docs
-      src/brewup
-    """
-        help = "Generate this package's docs"
 
     [tool.poe.tasks.lint]
         help = "Lint this package"

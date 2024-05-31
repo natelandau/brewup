@@ -11,7 +11,7 @@ updates:
           prefix-development: "ci"
           include: scope
       groups:
-          ci-dependencies:
+          ci-deps:
               patterns:
                   - "*"
       reviewers:
@@ -28,7 +28,7 @@ updates:
       allow:
           - dependency-type: production
       groups:
-          runtime-dependencies:
+          runtime-deps:
               patterns:
                   - "*"
       reviewers:
