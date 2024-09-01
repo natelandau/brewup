@@ -21,10 +21,10 @@
         loguru      = "^0.7.2"
         python      = "^3.10"
         questionary = "^2.0.1"
-        rich        = "^13.7.1"
+        rich        = "^13.8.0"
         sh          = "^2.0.6"
         shellingham = "^1.5.4"
-        typer       = "^0.12.3"
+        typer       = "^0.12.5"
 
     [tool.poetry.group.test.dependencies]
         pytest                 = "^8.2.1"
